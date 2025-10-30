@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-selfcheck.json
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files and directories
+*.safetensors
+distilbert-local/
+models/
+student_model/
+student_pruned_fixed_temp_model_monitored/
+student_quantized_model/
+student_softlabel_model/
+teacher_model/

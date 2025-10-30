@@ -1,0 +1,17 @@
+{
+    "Distilled Student (Baseline)": {
+        "accuracy": 0.9002293577981652,
+        "size_mb": 255.42503356933594,
+        "gflops": 0.681298944
+    },
+    "Quantized Distilled Student": {
+        "accuracy": 0.9036697247706422,
+        "size_mb": 66.84339237213135,
+        "gflops": 0.681298944
+    },
+    "Pruned + Quantized Student (Final)": {
+        "accuracy": 0.8887614678899083,
+        "size_mb": 68.70995616912842,
+        "gflops": 0.5450391552
+    }
+}
