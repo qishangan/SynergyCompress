@@ -12,6 +12,7 @@ import json
 import copy
 from datetime import datetime
 import time
+from tqdm import tqdm
 
 class GradualPruningWithFinetuningConfig:
     """Configuration for gradual pruning with a post-pruning finetuning phase."""
@@ -154,6 +155,7 @@ def main():
     global_step = 0
     for epoch in range(1, config.total_epochs + 1):
         student.train()
+        last_sparsity = 0.0
         
         # Determine current phase
         if epoch >= config.finetuning_start_epoch:
@@ -170,7 +172,15 @@ def main():
 
         print(f"\n--- Epoch {epoch}/{config.total_epochs} | Phase: {phase} ---")
 
-        for batch in train_loader:
+        progress_bar = tqdm(
+            enumerate(train_loader, 1),
+            total=len(train_loader),
+            desc=f"Epoch {epoch}/{config.total_epochs} [{phase}]",
+            leave=False,
+            dynamic_ncols=True,
+        )
+
+        for batch_idx, batch in progress_bar:
             global_step += 1
             
             # Dynamic parameter calculation
@@ -183,6 +193,7 @@ def main():
             # Pruning step
             if phase == "Pruning" and global_step % config.pruning_frequency_steps == 0:
                 actual_sparsity = pruner.compute_importance_and_prune(target_sparsity)
+                last_sparsity = actual_sparsity
             elif phase == "Finetuning":
                 pruner.apply_masks() # Ensure pruned weights stay zero
 
@@ -210,6 +221,13 @@ def main():
             # Ensure pruned weights stay zero after optimizer step
             if phase in ["Pruning", "Finetuning"]:
                 pruner.apply_masks()
+
+            progress_bar.set_postfix({
+                "loss": f"{loss.item():.4f}",
+                "T": f"{temperature:.2f}",
+                "alpha": f"{alpha:.2f}",
+                "sparsity": f"{last_sparsity:.3f}"
+            })
 
         # Evaluation
         val_acc = evaluate(student, val_loader, device)

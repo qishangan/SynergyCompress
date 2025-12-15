@@ -2,16 +2,36 @@
     "Distilled Student (Baseline)": {
         "accuracy": 0.9002293577981652,
         "size_mb": 255.42503356933594,
-        "gflops": 0.681298944
+        "gflops": 0.681298944,
+        "real_sparsity": 0.0,
+        "latency_ms": 33.242457962036134
     },
     "Quantized Distilled Student": {
         "accuracy": 0.9036697247706422,
         "size_mb": 66.84339237213135,
-        "gflops": 0.681298944
+        "gflops": 0.681298944,
+        "real_sparsity": 0.00028808028609661473,
+        "latency_ms": 34.55786552429199
     },
-    "Pruned + Quantized Student (Final)": {
-        "accuracy": 0.8887614678899083,
+    "Pruned Student (Sparse FP32)": {
+        "accuracy": 0.8864678899082569,
+        "size_mb": 255.42503356933594,
+        "gflops": 0.5450391552,
+        "real_sparsity": 0.15001085069444442,
+        "latency_ms": 33.20984001159668
+    },
+    "Pruned + Quantized Student (PTQ)": {
+        "accuracy": 0.8394495412844036,
         "size_mb": 68.70995616912842,
-        "gflops": 0.5450391552
+        "gflops": 0.5450391552,
+        "real_sparsity": 0.1502497166763117,
+        "latency_ms": 13.371966361999512
+    },
+    "Pruned + QKD-4bit (QAT)": {
+        "accuracy": 0.8486238532110092,
+        "size_mb": 68.70995616912842,
+        "gflops": 0.5450391552,
+        "real_sparsity": 0.1502497166763117,
+        "latency_ms": 13.303768014907837
     }
 }
