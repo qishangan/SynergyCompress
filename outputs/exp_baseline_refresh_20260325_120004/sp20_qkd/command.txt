@@ -1,0 +1,1 @@
+﻿python 10_qat_kd_4bit.py --pruned_model_path models/baseline_exact_sp20_prune_rerun --output_dir models/baseline_exact_sp20_qkd_rerun --enable_hidden_kd

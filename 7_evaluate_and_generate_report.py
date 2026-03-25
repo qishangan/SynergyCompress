@@ -1,96 +1,68 @@
-import os
+import argparse
 import json
-import torch
-import numpy as np
-import matplotlib.pyplot as plt
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, BitsAndBytesConfig
-from datasets import load_dataset
-from torch.utils.data import DataLoader
-from thop import profile
+import os
 import time
+from pathlib import Path
+from typing import Dict, List, Optional
 
-# --- Configuration ---
+import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+from datasets import load_dataset
+from thop import profile
+from torch.utils.data import DataLoader
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, BitsAndBytesConfig
+
+
 EVAL_BATCH_SIZE = 32
 MAX_LENGTH = 128
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-FINAL_REPORT_IMAGE = "final_report.png"
-FINAL_REPORT_JSON = "final_report.json"
 
-# --- Helper Functions ---
 
-def find_latest_model(prefix, root="./models"):
-    """Return latest directory under root matching prefix, or None."""
-    if not os.path.isdir(root):
-        return None
-    candidates = []
-    for name in os.listdir(root):
-        full = os.path.join(root, name)
-        if os.path.isdir(full) and name.startswith(prefix):
-            candidates.append(full)
-    if not candidates:
-        return None
-    candidates.sort(key=lambda p: os.path.getmtime(p), reverse=True)
-    return candidates[0]
-
-def get_model_size(model_path):
+def get_model_size(model_path: str) -> float:
     total_size = 0
-    for dirpath, _, filenames in os.walk(model_path):
-        for f in filenames:
-            if f.endswith((".bin", ".safetensors")):
-                fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
+    for child in Path(model_path).iterdir():
+        if child.is_file() and child.suffix in {".bin", ".safetensors"}:
+            total_size += child.stat().st_size
     return total_size / (1024 * 1024)
 
-def calculate_gflops(model_path, tokenizer):
-    print(f"  -> Calculating GFLOPs from: {model_path}")
+
+def calculate_dense_gflops(model_path: str, tokenizer) -> float:
+    print(f"  -> Calculating dense reference GFLOPs from: {model_path}")
     model = AutoModelForSequenceClassification.from_pretrained(model_path).to(DEVICE)
     model.eval()
     dummy_input = tokenizer("This is a dummy sentence.", return_tensors="pt").to(DEVICE)
-    input_ids = dummy_input.input_ids
-    macs, _ = profile(model, inputs=(input_ids,), verbose=False)
+    macs, _ = profile(model, inputs=(dummy_input.input_ids,), verbose=False)
     return (macs * 2) / 1e9
 
-def evaluate_accuracy(model, dataloader):
-    model.eval()
-    total_correct, total_samples = 0, 0
-    with torch.no_grad():
-        for batch in dataloader:
-            input_ids = batch['input_ids'].to(DEVICE)
-            attention_mask = batch['attention_mask'].to(DEVICE)
-            labels = batch['label'].to(DEVICE)
-            outputs = model(input_ids, attention_mask=attention_mask)
-            predictions = torch.argmax(outputs.logits, dim=-1)
-            total_correct += (predictions == labels).sum().item()
-            total_samples += labels.size(0)
-    return total_correct / total_samples if total_samples > 0 else 0
 
 def get_first_param_device(model):
-    for p in model.parameters():
-        return p.device
+    for param in model.parameters():
+        return param.device
     return torch.device("cpu")
 
+
 def measure_latency(model, tokenizer, seq_len=MAX_LENGTH, batch_size=32, warmup=5, iters=20):
-    """粗略测 GPU/CPU latency（平均单次 forward ms）。"""
     device = get_first_param_device(model)
     model.eval()
 
-    # 构造固定长度的 dummy 输入
-    dummy = tokenizer(["This is a dummy sentence."] * batch_size,
-                      padding="max_length",
-                      truncation=True,
-                      max_length=seq_len,
-                      return_tensors="pt")
+    dummy = tokenizer(
+        ["This is a dummy sentence."] * batch_size,
+        padding="max_length",
+        truncation=True,
+        max_length=seq_len,
+        return_tensors="pt",
+    )
     dummy = {k: v.to(device) for k, v in dummy.items()}
 
-    # 选择计时方法
     use_cuda = device.type == "cuda"
     if use_cuda:
-        starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+        starter = torch.cuda.Event(enable_timing=True)
+        ender = torch.cuda.Event(enable_timing=True)
         torch.cuda.synchronize()
     else:
         starter = ender = None
 
-    # warmup
     with torch.no_grad():
         for _ in range(warmup):
             _ = model(**dummy)
@@ -105,186 +77,274 @@ def measure_latency(model, tokenizer, seq_len=MAX_LENGTH, batch_size=32, warmup=
                 _ = model(**dummy)
                 ender.record()
                 torch.cuda.synchronize()
-                timings.append(starter.elapsed_time(ender))  # ms
+                timings.append(starter.elapsed_time(ender))
             else:
                 t0 = time.perf_counter()
                 _ = model(**dummy)
                 t1 = time.perf_counter()
-                timings.append((t1 - t0) * 1000)  # ms
+                timings.append((t1 - t0) * 1000)
+
     return sum(timings) / len(timings) if timings else None
 
-def get_real_sparsity(model):
-    """统计 Linear 层（非 classifier）真实稀疏度。"""
+
+def load_eval_dataset(tokenizer, batch_size: int, max_length: int):
+    try:
+        dataset = load_dataset("./sst2_data/glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c")
+    except Exception:
+        dataset = load_dataset("glue", "sst2")
+
+    def tokenize_function(examples):
+        return tokenizer(
+            examples["sentence"],
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+        )
+
+    tokenized = dataset.map(tokenize_function, batched=True)
+    tokenized.set_format(type="torch", columns=["input_ids", "attention_mask", "label"])
+    return DataLoader(tokenized["validation"], batch_size=batch_size)
+
+
+def evaluate_metrics(model, dataloader) -> Dict[str, float]:
+    model.eval()
+    total_correct = 0
+    total_samples = 0
+    total_loss = 0.0
+    ce_loss_fn = nn.CrossEntropyLoss()
+
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+
+    with torch.no_grad():
+        for batch in dataloader:
+            input_ids = batch["input_ids"].to(DEVICE)
+            attention_mask = batch["attention_mask"].to(DEVICE)
+            labels = batch["label"].to(DEVICE)
+            outputs = model(input_ids, attention_mask=attention_mask)
+            logits = outputs.logits.float()
+            total_loss += ce_loss_fn(logits, labels).item() * labels.size(0)
+            predictions = torch.argmax(logits, dim=-1)
+            total_correct += (predictions == labels).sum().item()
+            total_samples += labels.size(0)
+
+    peak_memory_mb = torch.cuda.max_memory_allocated() / (1024 ** 2) if torch.cuda.is_available() else 0.0
+    return {
+        "accuracy": total_correct / total_samples if total_samples > 0 else 0.0,
+        "loss": total_loss / total_samples if total_samples > 0 else 0.0,
+        "peak_memory_mb": peak_memory_mb,
+    }
+
+
+def get_real_sparsity_from_path(model_path: str) -> float:
+    model = AutoModelForSequenceClassification.from_pretrained(model_path).to(DEVICE)
+    model.eval()
     total = 0
     nonzero = 0
     with torch.no_grad():
         for name, module in model.named_modules():
             if isinstance(module, torch.nn.Linear) and "classifier" not in name:
-                w = module.weight
-                total += w.numel()
-                nonzero += (w != 0).sum().item()
+                weight = module.weight
+                total += weight.numel()
+                nonzero += (weight != 0).sum().item()
     if total == 0:
         return 0.0
-    density = nonzero / total
-    return 1.0 - density
+    return 1.0 - (nonzero / total)
 
-def generate_report_plot(results):
-    plt.style.use('seaborn-v0_8-whitegrid')
+
+def load_model_for_eval(model_path: str, quantized: bool):
+    if quantized:
+        quant_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=False,
+        )
+        return AutoModelForSequenceClassification.from_pretrained(
+            model_path,
+            quantization_config=quant_config,
+            device_map="auto",
+        )
+    return AutoModelForSequenceClassification.from_pretrained(model_path).to(DEVICE)
+
+
+def default_manifest() -> List[Dict[str, object]]:
+    entries = [
+        {
+            "name": "Distilled Student (Baseline)",
+            "eval_path": "./student_model",
+            "quantized": False,
+            "sparsity_source_path": "./student_model",
+        },
+    ]
+
+    models_root = Path("./models")
+    if models_root.exists():
+        latest_pruned = None
+        latest_ptq = None
+        latest_qkd = None
+        for child in sorted(models_root.iterdir(), key=lambda path: path.stat().st_mtime, reverse=True):
+            if not child.is_dir():
+                continue
+            if latest_pruned is None and child.name.startswith("pruning_"):
+                latest_pruned = child
+            if latest_ptq is None and child.name.startswith("pruned_quantized_ptq_"):
+                latest_ptq = child
+            if latest_qkd is None and child.name.startswith("pruned_qkd4bit_"):
+                latest_qkd = child
+        if latest_pruned is not None:
+            entries.append({
+                "name": "Latest Pruned Model",
+                "eval_path": str(latest_pruned),
+                "quantized": False,
+                "sparsity_source_path": str(latest_pruned),
+            })
+        if latest_ptq is not None:
+            entries.append({
+                "name": "Latest PTQ 4-bit Model",
+                "eval_path": str(latest_ptq),
+                "quantized": True,
+                "sparsity_source_path": str(latest_pruned or latest_ptq),
+            })
+        if latest_qkd is not None:
+            entries.append({
+                "name": "Latest QKD 4-bit Model",
+                "eval_path": str(latest_qkd),
+                "quantized": True,
+                "sparsity_source_path": str(latest_pruned or latest_qkd),
+            })
+    return entries
+
+
+def load_manifest(path: Optional[str]) -> List[Dict[str, object]]:
+    if path is None:
+        return default_manifest()
+    payload = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    if isinstance(payload, dict) and "models" in payload:
+        payload = payload["models"]
+    if not isinstance(payload, list):
+        raise ValueError("Manifest must be a list of model entries or a dict with 'models'")
+    return payload
+
+
+def generate_report_plot(results: Dict[str, Dict[str, float]], output_path: str):
+    plt.style.use("seaborn-v0_8-whitegrid")
     fig, ax = plt.subplots(figsize=(10, 7))
-    
+
     labels = list(results.keys())
-    accuracies = [res['accuracy'] for res in results.values()]
-    gflops = [res['gflops'] for res in results.values()]
-    
-    palette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
-    colors = palette[:len(labels)]
-    ax.scatter(gflops, accuracies, s=200, c=colors, alpha=0.7, edgecolors='w')
+    accuracies = [res["accuracy"] for res in results.values()]
+    gflops = [res["theoretical_gflops"] for res in results.values()]
 
-    for i, label in enumerate(labels):
-        ax.text(gflops[i], accuracies[i] + 0.001, label, fontsize=10, ha='center', va='bottom')
+    palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#8c564b", "#e377c2", "#7f7f7f"]
+    if len(labels) <= len(palette):
+        colors = palette[: len(labels)]
+    else:
+        cmap = plt.colormaps.get_cmap("tab20")
+        denom = max(len(labels) - 1, 1)
+        colors = [cmap(idx / denom) for idx in range(len(labels))]
+    ax.scatter(gflops, accuracies, s=180, c=colors, alpha=0.8, edgecolors="white")
 
-    ax.set_xlabel("Computational Cost (GFLOPs)", fontsize=12)
+    for idx, label in enumerate(labels):
+        ax.text(gflops[idx], accuracies[idx] + 0.001, label, fontsize=9, ha="center", va="bottom")
+
+    ax.set_xlabel("Theoretical GFLOPs", fontsize=12)
     ax.set_ylabel("Accuracy", fontsize=12)
-    ax.set_title("Model Accuracy vs. Computational Cost", fontsize=16, weight='bold')
-    ax.grid(True)
+    ax.set_title("Accuracy vs. Theoretical GFLOPs", fontsize=15, weight="bold")
+    ax.grid(True, alpha=0.3)
     ax.set_ylim(min(accuracies) - 0.01, max(accuracies) + 0.01)
-    
-    plt.figtext(0.5, 0.01, "Ideal models are in the top-left (High Accuracy, Low Cost).", ha="center", fontsize=10, style='italic')
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    plt.savefig(FINAL_REPORT_IMAGE)
-    print(f"\n--- Report plot saved to {FINAL_REPORT_IMAGE} ---")
 
-# --- Main Execution ---
+    plt.figtext(
+        0.5,
+        0.01,
+        "Measured latency is reported separately; zero-masked weights do not imply structural acceleration.",
+        ha="center",
+        fontsize=9,
+        style="italic",
+    )
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    plt.savefig(output_path)
+    print(f"\n--- Report plot saved to {output_path} ---")
+
 
 def main():
-    print("--- Starting Final Model Evaluation (Corrected) ---")
-    
-    # Build model list dynamically based on最新完整实验的产物
-    models_to_eval = []
-    # Baseline distilled
-    models_to_eval.append({
-        "name": "Distilled Student (Baseline)",
-        "eval_path": "./student_model",
-        "gflops_path": "./student_model",
-        "sparsity": 0.0,
-        "quantized": False,
-    })
-    # Quantized distilled
-    models_to_eval.append({
-        "name": "Quantized Distilled Student",
-        "eval_path": "./models/distilled_quantized_student",
-        "gflops_path": "./student_model",
-        "sparsity": 0.0,
-        "quantized": True,
-    })
-    # Latest pruned (full) model
-    latest_pruned = find_latest_model("pruning_with_finetuning_")
-    if latest_pruned:
-        models_to_eval.append({
-            "name": "Pruned Student (Sparse FP32)",
-            "eval_path": latest_pruned,
-            "gflops_path": latest_pruned,
-            "sparsity": 0.20,
-            "quantized": False,
-        })
-    # Latest PTQ 4bit
-    latest_ptq = find_latest_model("pruned_quantized")
-    if latest_ptq and latest_pruned:
-        models_to_eval.append({
-            "name": "Pruned + Quantized Student (PTQ)",
-            "eval_path": latest_ptq,
-            "gflops_path": latest_pruned,
-            "sparsity": 0.20,
-            "quantized": True,
-        })
-    # Latest QKD 4bit
-    latest_qkd = find_latest_model("pruned_qkd4bit")
-    if latest_qkd and latest_pruned:
-        models_to_eval.append({
-            "name": "Pruned + QKD-4bit (QAT)",
-            "eval_path": latest_qkd,
-            "gflops_path": latest_pruned,
-            "sparsity": 0.20,
-            "quantized": True,
-        })
-    if not models_to_eval:
-        print("No models found for evaluation. Please check the models directory.")
-        return
-    
-    try:
-        dataset = load_dataset("./sst2_data/glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c")
-    except Exception:
-        dataset = load_dataset("glue", "sst2")
-    
-    base_tokenizer = AutoTokenizer.from_pretrained("./distilbert-local")
-    
-    def tokenize_function(examples):
-        return base_tokenizer(examples['sentence'], padding='max_length', truncation=True, max_length=MAX_LENGTH)
-        
-    tokenized_datasets = dataset.map(tokenize_function, batched=True)
-    tokenized_datasets.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
-    val_loader = DataLoader(tokenized_datasets['validation'], batch_size=EVAL_BATCH_SIZE)
+    parser = argparse.ArgumentParser(description="Evaluate dense/pruned/PTQ/QKD checkpoints")
+    parser.add_argument("--manifest", type=str, default=None, help="JSON manifest of models to evaluate")
+    parser.add_argument("--output_json", type=str, default="final_report.json", help="Output JSON path")
+    parser.add_argument("--output_png", type=str, default="final_report.png", help="Output figure path")
+    parser.add_argument("--batch_size", type=int, default=EVAL_BATCH_SIZE, help="Evaluation batch size")
+    parser.add_argument("--max_length", type=int, default=MAX_LENGTH, help="Maximum sequence length")
+    parser.add_argument("--dense_reference_path", type=str, default="./student_model", help="Dense reference for theoretical GFLOPs")
+    args = parser.parse_args()
 
-    results = {}
-    baseline_gflops = None
+    print("--- Starting Final Model Evaluation ---")
+    manifest = load_manifest(args.manifest)
+    if not manifest:
+        raise ValueError("No models found for evaluation")
 
-    for entry in models_to_eval:
+    tokenizer = AutoTokenizer.from_pretrained("./distilbert-local")
+    val_loader = load_eval_dataset(tokenizer, batch_size=args.batch_size, max_length=args.max_length)
+    dense_reference_gflops = calculate_dense_gflops(args.dense_reference_path, tokenizer)
+
+    results: Dict[str, Dict[str, float]] = {}
+    for entry in manifest:
         name = entry["name"]
         eval_path = entry["eval_path"]
-        gflops_path = entry["gflops_path"]
-        sparsity = entry["sparsity"]
-        is_quantized = entry["quantized"]
+        quantized = bool(entry.get("quantized", False))
+        sparsity_source_path = entry.get("sparsity_source_path", eval_path)
 
         print(f"\n--- Evaluating: {name} ---")
-
         if not os.path.exists(eval_path):
-            print(f"  -> Skipped: path not found {eval_path}")
+            print(f"  -> Skipped missing path: {eval_path}")
             continue
-        
-        # 1. Evaluate Accuracy
-        if is_quantized:
-            quant_config = BitsAndBytesConfig(load_in_4bit=True)
-            model_for_eval = AutoModelForSequenceClassification.from_pretrained(
-                eval_path, quantization_config=quant_config, device_map="auto"
-            )
-        else:
-            model_for_eval = AutoModelForSequenceClassification.from_pretrained(eval_path).to(DEVICE)
-            
-        accuracy = evaluate_accuracy(model_for_eval, val_loader)
-        size_mb = get_model_size(eval_path)
-        real_sparsity = get_real_sparsity(model_for_eval)
-        latency_ms = measure_latency(model_for_eval, base_tokenizer, seq_len=MAX_LENGTH, batch_size=EVAL_BATCH_SIZE)
-        
-        # 2. Calculate GFLOPs
-        if baseline_gflops is None: # First model must be the baseline
-            baseline_gflops = calculate_gflops(gflops_path, base_tokenizer)
-        
-        gflops = baseline_gflops * (1 - sparsity)
-        
-        results[name] = {
-            "accuracy": accuracy,
-            "size_mb": size_mb,
-            "gflops": gflops,
-            "real_sparsity": real_sparsity,
-            "latency_ms": latency_ms
-        }
-        lat_str = f"{latency_ms:.2f}" if latency_ms is not None else "N/A"
-        print(f"  -> Accuracy: {accuracy:.4f} | Size: {size_mb:.2f} MB | GFLOPs: {gflops:.2f} | Sparsity(real): {real_sparsity:.3f} | Latency(ms): {lat_str}")
+        if not os.path.exists(sparsity_source_path):
+            raise FileNotFoundError(f"Sparsity source path not found: {sparsity_source_path}")
 
-    print("\n--- Final Comparison Report (Corrected) ---")
-    header = f"{'Model':<40} | {'Accuracy':<10} | {'Size (MB)':<12} | {'GFLOPs (Theoretical)':<25} | {'Sparsity(real)':<15} | {'Latency(ms)':<12}"
+        model = load_model_for_eval(eval_path, quantized=quantized)
+        metrics = evaluate_metrics(model, val_loader)
+        size_mb = get_model_size(eval_path)
+        real_sparsity = get_real_sparsity_from_path(sparsity_source_path)
+        theoretical_gflops = dense_reference_gflops * (1.0 - real_sparsity)
+        latency_ms = measure_latency(model, tokenizer, seq_len=args.max_length, batch_size=args.batch_size)
+
+        result = {
+            "accuracy": metrics["accuracy"],
+            "loss": metrics["loss"],
+            "real_sparsity": real_sparsity,
+            "theoretical_gflops": theoretical_gflops,
+            "measured_latency_ms": latency_ms,
+            "model_size_mb": size_mb,
+            "peak_memory_mb": metrics["peak_memory_mb"],
+            "structural_speedup_realized": False,
+        }
+        results[name] = result
+
+        latency_str = f"{latency_ms:.2f}" if latency_ms is not None else "N/A"
+        print(
+            f"  -> Acc: {result['accuracy']:.4f} | Loss: {result['loss']:.4f} | "
+            f"Real Sparsity: {result['real_sparsity']:.4f} | "
+            f"Theoretical GFLOPs: {result['theoretical_gflops']:.4f} | "
+            f"Latency(ms): {latency_str} | Size(MB): {result['model_size_mb']:.2f}"
+        )
+
+    header = (
+        f"{'Model':<36} | {'Acc':<8} | {'Loss':<8} | {'Real Sparsity':<14} | "
+        f"{'Theoretical GFLOPs':<19} | {'Latency(ms)':<12} | {'Size(MB)':<10}"
+    )
+    print("\n--- Evaluation Summary ---")
     print(header)
     print("-" * len(header))
     for name, res in results.items():
-        note = "(Calculated)" if res['gflops'] != baseline_gflops else ""
-        lat = f"{res['latency_ms']:.2f}" if res.get("latency_ms") is not None else "N/A"
-        print(f"{name:<40} | {res['accuracy']:<10.4f} | {res['size_mb']:<12.2f} | {res['gflops']:.2f} {note:<25} | {res.get('real_sparsity',0):<15.3f} | {lat:<12}")
+        latency_str = f"{res['measured_latency_ms']:.2f}" if res["measured_latency_ms"] is not None else "N/A"
+        print(
+            f"{name:<36} | {res['accuracy']:<8.4f} | {res['loss']:<8.4f} | "
+            f"{res['real_sparsity']:<14.4f} | {res['theoretical_gflops']:<19.4f} | "
+            f"{latency_str:<12} | {res['model_size_mb']:<10.2f}"
+        )
 
-    with open(FINAL_REPORT_JSON, 'w') as f:
-        json.dump(results, f, indent=4)
-    print(f"\n--- Detailed results saved to {FINAL_REPORT_JSON} ---")
+    Path(args.output_json).write_text(json.dumps(results, indent=2), encoding="utf-8")
+    print(f"\n--- Detailed results saved to {args.output_json} ---")
+    generate_report_plot(results, args.output_png)
 
-    generate_report_plot(results)
 
 if __name__ == "__main__":
     main()

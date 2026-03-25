@@ -1,0 +1,226 @@
+{
+  "method": "dgsp",
+  "global_step": 6318,
+  "global_target_sparsity": 0.19999136398738737,
+  "adaptive_enabled": true,
+  "rho_min_factor": 0.5,
+  "rho_max_factor": 1.5,
+  "layers": [
+    {
+      "layer_name": "distilbert.transformer.layer.0.attention.k_lin",
+      "mean_sensitivity": 0.2553758509434837,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.0.attention.out_lin",
+      "mean_sensitivity": 0.45650542114903025,
+      "target_sparsity": 0.18356477933387821,
+      "actual_sparsity": 0.18359375
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.0.attention.q_lin",
+      "mean_sensitivity": 0.2881738754485498,
+      "target_sparsity": 0.2907908140363049,
+      "actual_sparsity": 0.2916666269302368
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.0.attention.v_lin",
+      "mean_sensitivity": 0.4003018493372939,
+      "target_sparsity": 0.20933782039463447,
+      "actual_sparsity": 0.20963537693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.0.ffn.lin1",
+      "mean_sensitivity": 0.31224580062993257,
+      "target_sparsity": 0.26837291608342745,
+      "actual_sparsity": 0.2685546875
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.0.ffn.lin2",
+      "mean_sensitivity": 0.9433134993376183,
+      "target_sparsity": 0.09999568199369369,
+      "actual_sparsity": 0.10026037693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.1.attention.k_lin",
+      "mean_sensitivity": 0.4207208258459459,
+      "target_sparsity": 0.19917796218743217,
+      "actual_sparsity": 0.19921875
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.1.attention.out_lin",
+      "mean_sensitivity": 0.4044845058916662,
+      "target_sparsity": 0.20717311897306973,
+      "actual_sparsity": 0.20703125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.1.attention.q_lin",
+      "mean_sensitivity": 0.4577587230669141,
+      "target_sparsity": 0.1830621956071764,
+      "actual_sparsity": 0.18359375
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.1.attention.v_lin",
+      "mean_sensitivity": 0.3549526111961074,
+      "target_sparsity": 0.23608311005341479,
+      "actual_sparsity": 0.23697912693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.1.ffn.lin1",
+      "mean_sensitivity": 0.5180623006425793,
+      "target_sparsity": 0.16175335864454085,
+      "actual_sparsity": 0.16178381443023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.1.ffn.lin2",
+      "mean_sensitivity": 1.0,
+      "target_sparsity": 0.09999568199369369,
+      "actual_sparsity": 0.10026037693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.2.attention.k_lin",
+      "mean_sensitivity": 0.36921067178731726,
+      "target_sparsity": 0.22696612765353427,
+      "actual_sparsity": 0.2278645634651184
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.2.attention.out_lin",
+      "mean_sensitivity": 0.4615910305368813,
+      "target_sparsity": 0.18154234240795053,
+      "actual_sparsity": 0.18229162693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.2.attention.q_lin",
+      "mean_sensitivity": 0.38964074362392404,
+      "target_sparsity": 0.21506559042966453,
+      "actual_sparsity": 0.21484375
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.2.attention.v_lin",
+      "mean_sensitivity": 0.5502175953659892,
+      "target_sparsity": 0.1523003224839532,
+      "actual_sparsity": 0.15234375
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.2.ffn.lin1",
+      "mean_sensitivity": 0.46955512530339377,
+      "target_sparsity": 0.17846321429206402,
+      "actual_sparsity": 0.1787109375
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.2.ffn.lin2",
+      "mean_sensitivity": 0.9972590778823381,
+      "target_sparsity": 0.09999568199369369,
+      "actual_sparsity": 0.10026037693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.3.attention.k_lin",
+      "mean_sensitivity": 0.44451071343240833,
+      "target_sparsity": 0.18851810387501466,
+      "actual_sparsity": 0.1888020634651184
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.3.attention.out_lin",
+      "mean_sensitivity": 0.4384966695680636,
+      "target_sparsity": 0.19110365628340287,
+      "actual_sparsity": 0.19140625
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.3.attention.q_lin",
+      "mean_sensitivity": 0.43498274159347905,
+      "target_sparsity": 0.1926474519428851,
+      "actual_sparsity": 0.1927083134651184
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.3.attention.v_lin",
+      "mean_sensitivity": 0.5111031793098085,
+      "target_sparsity": 0.1639557734843125,
+      "actual_sparsity": 0.1640625
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.3.ffn.lin1",
+      "mean_sensitivity": 0.22439003199497665,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.3001301884651184
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.3.ffn.lin2",
+      "mean_sensitivity": 0.796230917093735,
+      "target_sparsity": 0.105243737566757,
+      "actual_sparsity": 0.10546875
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.4.attention.k_lin",
+      "mean_sensitivity": 0.2914792958829657,
+      "target_sparsity": 0.2874932012059725,
+      "actual_sparsity": 0.2877603769302368
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.4.attention.out_lin",
+      "mean_sensitivity": 0.2096328697022042,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.4.attention.q_lin",
+      "mean_sensitivity": 0.2384673703800065,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.4.attention.v_lin",
+      "mean_sensitivity": 0.3406573154365067,
+      "target_sparsity": 0.24599006824882563,
+      "actual_sparsity": 0.24609375
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.4.ffn.lin1",
+      "mean_sensitivity": 0.07500103195952801,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.3001301884651184
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.4.ffn.lin2",
+      "mean_sensitivity": 0.7299210999945746,
+      "target_sparsity": 0.11480462420687015,
+      "actual_sparsity": 0.11588537693023682
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.5.attention.k_lin",
+      "mean_sensitivity": 0.1484130343023347,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.5.attention.out_lin",
+      "mean_sensitivity": 0.11485493281825937,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.5.attention.q_lin",
+      "mean_sensitivity": 0.13743035213467997,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.5.attention.v_lin",
+      "mean_sensitivity": 0.2051851476435545,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.30078125
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.5.ffn.lin1",
+      "mean_sensitivity": 0.0,
+      "target_sparsity": 0.29998704598108106,
+      "actual_sparsity": 0.3001301884651184
+    },
+    {
+      "layer_name": "distilbert.transformer.layer.5.ffn.lin2",
+      "mean_sensitivity": 0.5317554397901215,
+      "target_sparsity": 0.15758807693774085,
+      "actual_sparsity": 0.1575520634651184
+    }
+  ]
+}

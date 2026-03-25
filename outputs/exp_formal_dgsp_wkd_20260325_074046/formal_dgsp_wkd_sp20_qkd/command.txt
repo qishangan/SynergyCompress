@@ -1,0 +1,1 @@
+C:\Users\23074\AppData\Local\Programs\Python\Python312\python.exe 10_qat_kd_4bit.py --pruned_model_path models\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_prune_sp20 --output_dir models\formal_dgsp_wkd_20260325_074046_formal_dgsp_wkd_sp20_qkd --enable_hidden_kd --weighted_hidden --hidden_tau 1.0 --train_subset_ratio 0.5 --val_subset_ratio 1.0

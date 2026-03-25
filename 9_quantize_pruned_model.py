@@ -1,67 +1,80 @@
+import argparse
+import json
+import os
+import shutil
+from datetime import datetime
+from pathlib import Path
+
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, BitsAndBytesConfig
-import os
+
+
+def find_latest_pruned_model(root: str = "./models") -> str | None:
+    if not os.path.isdir(root):
+        return None
+    candidates = []
+    for name in os.listdir(root):
+        full = os.path.join(root, name)
+        if not os.path.isdir(full):
+            continue
+        if name.startswith("pruning_") or name.startswith("pruning_with_finetuning_"):
+            candidates.append(full)
+    if not candidates:
+        return None
+    candidates.sort(key=lambda path: os.path.getmtime(path), reverse=True)
+    return candidates[0]
+
 
 def main():
-    """
-    Loads the pruned-and-finetuned model, applies 4-bit quantization, and saves it.
-    """
-    pruned_model_path = "./models/pruning_with_finetuning_20251029_092719"
-    quantized_model_save_path = None
-    
-    print(f"--- Loading Pruned Model from: {pruned_model_path} ---")
+    parser = argparse.ArgumentParser(description="Apply 4-bit PTQ to a pruned checkpoint")
+    parser.add_argument("--pruned_model_path", type=str, default=None, help="Path to the pruned model checkpoint")
+    parser.add_argument("--output_dir", type=str, default=None, help="Output directory for the PTQ checkpoint")
+    args = parser.parse_args()
 
-    if not os.path.exists(pruned_model_path):
-        # Auto-detect latest pruning_with_finetuning_* directory
-        models_root = "./models"
-        candidates = []
-        if os.path.isdir(models_root):
-            for name in os.listdir(models_root):
-                full_path = os.path.join(models_root, name)
-                if os.path.isdir(full_path) and name.startswith("pruning_with_finetuning_"):
-                    candidates.append(full_path)
-        if candidates:
-            candidates.sort(reverse=True)
-            pruned_model_path = candidates[0]
-            print(f"  -> Auto-detected latest pruned model: {pruned_model_path}")
-        else:
-            print(f"Error: Pruned model path not found at '{pruned_model_path}'.")
-            print("Please ensure the pruning and finetuning script (8) has been run successfully.")
-            return
+    pruned_model_path = args.pruned_model_path or find_latest_pruned_model()
+    if pruned_model_path is None or not os.path.exists(pruned_model_path):
+        raise FileNotFoundError("Could not resolve a pruned checkpoint for PTQ")
 
-    # Default save path: align name with source pruning checkpoint
-    if quantized_model_save_path is None:
+    if args.output_dir:
+        output_dir = Path(args.output_dir)
+    else:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_name = os.path.basename(pruned_model_path.rstrip(os.sep))
-        quantized_model_save_path = os.path.join("./models", base_name.replace("pruning_with_finetuning", "pruned_quantized_ptq"))
+        output_dir = Path("./models") / f"pruned_quantized_ptq_{base_name}_{timestamp}"
 
-    # Configure 4-bit quantization
+    print(f"--- Loading pruned model from: {pruned_model_path} ---")
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_use_double_quant=False,
     )
 
-    print("--- Applying 4-bit Quantization ---")
-    
-    # Load the pruned model with quantization
     model = AutoModelForSequenceClassification.from_pretrained(
         pruned_model_path,
         quantization_config=quantization_config,
-        device_map="auto" # Automatically handle device placement
+        device_map="auto",
     )
-    
     tokenizer = AutoTokenizer.from_pretrained(pruned_model_path)
 
-    print(f"--- Saving Quantized Model to: {quantized_model_save_path} ---")
-    
-    # Create directory if it doesn't exist
-    os.makedirs(quantized_model_save_path, exist_ok=True)
-    
-    # Save the quantized model and tokenizer
-    model.save_pretrained(quantized_model_save_path)
-    tokenizer.save_pretrained(quantized_model_save_path)
-    
-    print("--- Quantization and Saving Complete ---")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    print(f"--- Saving quantized model to: {output_dir} ---")
+    model.save_pretrained(output_dir)
+    tokenizer.save_pretrained(output_dir)
+
+    for metadata_name in ["layer_sensitivity.json", "pruning_allocation.json", "kgapq_stats.json"]:
+        source = Path(pruned_model_path) / metadata_name
+        if source.exists():
+            shutil.copy2(source, output_dir / metadata_name)
+
+    ptq_config = {
+        "pruned_model_path": pruned_model_path,
+        "output_dir": str(output_dir),
+        "quantization": "4bit-nf4",
+    }
+    (output_dir / "ptq_config.json").write_text(json.dumps(ptq_config, indent=2), encoding="utf-8")
+    print("--- PTQ complete ---")
+
 
 if __name__ == "__main__":
     main()

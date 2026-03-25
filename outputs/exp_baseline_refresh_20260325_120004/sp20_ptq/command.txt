@@ -1,0 +1,1 @@
+﻿python 9_quantize_pruned_model.py --pruned_model_path models/baseline_exact_sp20_prune_rerun --output_dir models/baseline_exact_sp20_ptq_rerun

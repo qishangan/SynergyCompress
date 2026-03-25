@@ -1,0 +1,161 @@
+Using device: cuda
+--- Loading Dataset ---
+--- Loading Teacher Model from: ./teacher_model ---
+--- Loading Pruned Student Model (4-bit) from: models\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_prune_sp20 ---
+
+Map:   0%|          | 0/67349 [00:00<?, ? examples/s]
+Map:   3%|��         | 2000/67349 [00:00<00:03, 17515.20 examples/s]
+Map:   7%|��         | 5000/67349 [00:00<00:03, 19298.51 examples/s]
+Map:  10%|��         | 7000/67349 [00:00<00:03, 19018.28 examples/s]
+Map:  13%|����        | 9000/67349 [00:00<00:03, 18184.87 examples/s]
+Map:  16%|����        | 11000/67349 [00:00<00:04, 13105.42 examples/s]
+Map:  19%|����        | 13000/67349 [00:00<00:03, 13838.23 examples/s]
+Map:  22%|������       | 15000/67349 [00:00<00:03, 14039.66 examples/s]
+Map:  25%|������       | 17000/67349 [00:01<00:03, 14371.49 examples/s]
+Map:  28%|������       | 19000/67349 [00:01<00:03, 14156.97 examples/s]
+Map:  31%|������       | 21000/67349 [00:01<00:03, 14575.72 examples/s]
+Map:  34%|��������      | 23000/67349 [00:01<00:02, 15480.22 examples/s]
+Map:  37%|��������      | 25000/67349 [00:01<00:02, 16332.49 examples/s]
+Map:  40%|��������      | 27000/67349 [00:01<00:02, 17064.41 examples/s]
+Map:  43%|����������     | 29000/67349 [00:01<00:02, 17347.50 examples/s]
+Map:  46%|����������     | 31000/67349 [00:01<00:02, 17178.93 examples/s]
+Map:  49%|����������     | 33000/67349 [00:02<00:02, 13296.17 examples/s]
+Map:  52%|������������    | 35000/67349 [00:02<00:02, 13943.30 examples/s]
+Map:  55%|������������    | 37000/67349 [00:02<00:02, 14951.77 examples/s]
+Map:  58%|������������    | 39000/67349 [00:02<00:01, 15417.24 examples/s]
+Map:  61%|������������    | 41000/67349 [00:02<00:01, 15370.42 examples/s]
+Map:  64%|��������������   | 43000/67349 [00:02<00:01, 15767.82 examples/s]
+Map:  67%|��������������   | 45000/67349 [00:02<00:01, 15520.26 examples/s]
+Map:  70%|��������������   | 47000/67349 [00:03<00:01, 15508.57 examples/s]
+Map:  73%|����������������  | 49000/67349 [00:03<00:01, 16083.96 examples/s]
+Map:  76%|����������������  | 51000/67349 [00:03<00:00, 16417.10 examples/s]
+Map:  79%|����������������  | 53000/67349 [00:03<00:00, 16289.83 examples/s]
+Map:  82%|������������������ | 55000/67349 [00:03<00:00, 12399.97 examples/s]
+Map:  85%|������������������ | 57000/67349 [00:03<00:00, 13850.23 examples/s]
+Map:  88%|������������������ | 59000/67349 [00:03<00:00, 15084.48 examples/s]
+Map:  91%|������������������ | 61000/67349 [00:03<00:00, 15747.01 examples/s]
+Map:  94%|��������������������| 63000/67349 [00:04<00:00, 15938.42 examples/s]
+Map:  97%|��������������������| 65000/67349 [00:04<00:00, 15444.35 examples/s]
+Map:  99%|��������������������| 67000/67349 [00:04<00:00, 15625.71 examples/s]
+Map: 100%|��������������������| 67349/67349 [00:04<00:00, 15214.70 examples/s]
+
+Map:   0%|          | 0/872 [00:00<?, ? examples/s]
+Map: 100%|��������������������| 872/872 [00:00<00:00, 9980.17 examples/s]
+
+Map:   0%|          | 0/1821 [00:00<?, ? examples/s]
+Map: 100%|��������������������| 1821/1821 [00:00<00:00, 16049.97 examples/s]
+Map: 100%|��������������������| 1821/1821 [00:00<00:00, 12783.12 examples/s]
+Using subset: train=33674, validation=872
+Number of trainable parameters: 23,855,618
+
+--- Starting QKD recovery for 2 epochs ---
+Loss weights: CE=0.3, Logits=0.5, Hidden=weighted
+
+--- Epoch 1/2 ---
+  Epoch 1 | Batch 50/2105 | Loss: 0.1639 | CE: 0.1035 | KD: 0.0619 | Hidden: 0.3397 | HiddenWeight: 0.300
+  Epoch 1 | Batch 100/2105 | Loss: 0.1276 | CE: 0.0318 | KD: 0.0388 | Hidden: 0.3290 | HiddenWeight: 0.300
+  Epoch 1 | Batch 150/2105 | Loss: 0.2679 | CE: 0.0951 | KD: 0.2833 | Hidden: 0.3258 | HiddenWeight: 0.300
+  Epoch 1 | Batch 200/2105 | Loss: 0.2435 | CE: 0.0727 | KD: 0.2545 | Hidden: 0.3147 | HiddenWeight: 0.300
+  Epoch 1 | Batch 250/2105 | Loss: 0.2231 | CE: 0.0745 | KD: 0.2076 | Hidden: 0.3233 | HiddenWeight: 0.300
+  Epoch 1 | Batch 300/2105 | Loss: 0.1151 | CE: 0.0136 | KD: 0.0296 | Hidden: 0.3209 | HiddenWeight: 0.300
+  Epoch 1 | Batch 350/2105 | Loss: 0.2450 | CE: 0.0748 | KD: 0.2483 | Hidden: 0.3280 | HiddenWeight: 0.300
+  Epoch 1 | Batch 400/2105 | Loss: 0.1936 | CE: 0.2701 | KD: 0.0317 | Hidden: 0.3223 | HiddenWeight: 0.300
+  Epoch 1 | Batch 450/2105 | Loss: 0.2153 | CE: 0.3047 | KD: 0.0547 | Hidden: 0.3217 | HiddenWeight: 0.300
+  Epoch 1 | Batch 500/2105 | Loss: 0.1246 | CE: 0.0210 | KD: 0.0489 | Hidden: 0.3131 | HiddenWeight: 0.300
+  Epoch 1 | Batch 550/2105 | Loss: 0.1032 | CE: 0.0100 | KD: 0.0094 | Hidden: 0.3183 | HiddenWeight: 0.300
+  Epoch 1 | Batch 600/2105 | Loss: 0.1227 | CE: 0.0586 | KD: 0.0182 | Hidden: 0.3200 | HiddenWeight: 0.300
+  Epoch 1 | Batch 650/2105 | Loss: 0.1115 | CE: 0.0161 | KD: 0.0204 | Hidden: 0.3215 | HiddenWeight: 0.300
+  Epoch 1 | Batch 700/2105 | Loss: 0.1332 | CE: 0.1301 | KD: 0.0044 | Hidden: 0.3066 | HiddenWeight: 0.300
+  Epoch 1 | Batch 750/2105 | Loss: 0.1562 | CE: 0.0236 | KD: 0.1066 | Hidden: 0.3195 | HiddenWeight: 0.300
+  Epoch 1 | Batch 800/2105 | Loss: 0.1084 | CE: 0.0303 | KD: 0.0082 | Hidden: 0.3175 | HiddenWeight: 0.300
+  Epoch 1 | Batch 850/2105 | Loss: 0.1201 | CE: 0.0178 | KD: 0.0497 | Hidden: 0.2997 | HiddenWeight: 0.300
+  Epoch 1 | Batch 900/2105 | Loss: 0.1071 | CE: 0.0181 | KD: 0.0131 | Hidden: 0.3171 | HiddenWeight: 0.300
+  Epoch 1 | Batch 950/2105 | Loss: 0.1574 | CE: 0.0324 | KD: 0.1102 | Hidden: 0.3086 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1000/2105 | Loss: 0.1406 | CE: 0.0516 | KD: 0.0738 | Hidden: 0.2940 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1050/2105 | Loss: 0.1438 | CE: 0.0408 | KD: 0.0843 | Hidden: 0.2982 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1100/2105 | Loss: 0.1540 | CE: 0.0329 | KD: 0.1069 | Hidden: 0.3022 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1150/2105 | Loss: 0.2137 | CE: 0.0698 | KD: 0.2120 | Hidden: 0.2891 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1200/2105 | Loss: 0.2741 | CE: 0.3952 | KD: 0.1338 | Hidden: 0.2954 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1250/2105 | Loss: 0.1181 | CE: 0.0338 | KD: 0.0363 | Hidden: 0.2994 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1300/2105 | Loss: 0.1133 | CE: 0.0149 | KD: 0.0348 | Hidden: 0.3048 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1350/2105 | Loss: 0.1009 | CE: 0.0087 | KD: 0.0051 | Hidden: 0.3191 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1400/2105 | Loss: 0.1074 | CE: 0.0131 | KD: 0.0250 | Hidden: 0.3033 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1450/2105 | Loss: 0.0978 | CE: 0.0115 | KD: 0.0088 | Hidden: 0.2997 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1500/2105 | Loss: 0.1226 | CE: 0.0120 | KD: 0.0592 | Hidden: 0.2979 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1550/2105 | Loss: 0.1590 | CE: 0.0244 | KD: 0.1190 | Hidden: 0.3073 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1600/2105 | Loss: 0.1092 | CE: 0.0106 | KD: 0.0282 | Hidden: 0.3063 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1650/2105 | Loss: 0.1038 | CE: 0.0118 | KD: 0.0171 | Hidden: 0.3056 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1700/2105 | Loss: 0.1914 | CE: 0.1024 | KD: 0.1418 | Hidden: 0.2991 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1750/2105 | Loss: 0.1463 | CE: 0.0160 | KD: 0.1084 | Hidden: 0.2912 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1800/2105 | Loss: 0.1578 | CE: 0.0999 | KD: 0.0862 | Hidden: 0.2824 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1850/2105 | Loss: 0.0982 | CE: 0.0135 | KD: 0.0090 | Hidden: 0.2990 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1900/2105 | Loss: 0.1532 | CE: 0.1396 | KD: 0.0515 | Hidden: 0.2854 | HiddenWeight: 0.300
+  Epoch 1 | Batch 1950/2105 | Loss: 0.1609 | CE: 0.0195 | KD: 0.1395 | Hidden: 0.2844 | HiddenWeight: 0.300
+  Epoch 1 | Batch 2000/2105 | Loss: 0.1229 | CE: 0.0318 | KD: 0.0543 | Hidden: 0.2875 | HiddenWeight: 0.300
+  Epoch 1 | Batch 2050/2105 | Loss: 0.1003 | CE: 0.0124 | KD: 0.0163 | Hidden: 0.2948 | HiddenWeight: 0.300
+  Epoch 1 | Batch 2100/2105 | Loss: 0.1339 | CE: 0.0278 | KD: 0.0671 | Hidden: 0.3066 | HiddenWeight: 0.300
+
+Epoch 1 summary:
+  Avg Loss: 0.1437
+  CE: 0.0475 | KD: 0.0741 | Hidden: 0.3079
+  Hidden Weight: 0.300
+  Validation Accuracy: 0.9060
+  Validation Loss: 0.2669
+  Peak Memory: 1159.0 MB
+  -> New best validation accuracy, checkpoint saved to models\formal_dgsp_wkd_20260325_074046_formal_dgsp_wkd_sp20_qkd
+
+--- Epoch 2/2 ---
+  Epoch 2 | Batch 50/2105 | Loss: 0.0398 | CE: 0.0102 | KD: 0.0138 | Hidden: 0.2989 | HiddenWeight: 0.100
+  Epoch 2 | Batch 100/2105 | Loss: 0.0952 | CE: 0.0744 | KD: 0.0880 | Hidden: 0.2882 | HiddenWeight: 0.100
+  Epoch 2 | Batch 150/2105 | Loss: 0.0532 | CE: 0.0162 | KD: 0.0386 | Hidden: 0.2906 | HiddenWeight: 0.100
+  Epoch 2 | Batch 200/2105 | Loss: 0.0641 | CE: 0.0524 | KD: 0.0395 | Hidden: 0.2863 | HiddenWeight: 0.100
+  Epoch 2 | Batch 250/2105 | Loss: 0.2068 | CE: 0.1661 | KD: 0.2572 | Hidden: 0.2837 | HiddenWeight: 0.100
+  Epoch 2 | Batch 300/2105 | Loss: 0.0866 | CE: 0.0386 | KD: 0.0933 | Hidden: 0.2838 | HiddenWeight: 0.100
+  Epoch 2 | Batch 350/2105 | Loss: 0.0453 | CE: 0.0129 | KD: 0.0207 | Hidden: 0.3108 | HiddenWeight: 0.100
+  Epoch 2 | Batch 400/2105 | Loss: 0.0425 | CE: 0.0116 | KD: 0.0170 | Hidden: 0.3049 | HiddenWeight: 0.100
+  Epoch 2 | Batch 450/2105 | Loss: 0.0612 | CE: 0.0269 | KD: 0.0494 | Hidden: 0.2840 | HiddenWeight: 0.100
+  Epoch 2 | Batch 500/2105 | Loss: 0.0490 | CE: 0.0143 | KD: 0.0317 | Hidden: 0.2884 | HiddenWeight: 0.100
+  Epoch 2 | Batch 550/2105 | Loss: 0.0417 | CE: 0.0128 | KD: 0.0139 | Hidden: 0.3092 | HiddenWeight: 0.100
+  Epoch 2 | Batch 600/2105 | Loss: 0.1472 | CE: 0.0412 | KD: 0.2119 | Hidden: 0.2887 | HiddenWeight: 0.100
+  Epoch 2 | Batch 650/2105 | Loss: 0.1120 | CE: 0.0367 | KD: 0.1447 | Hidden: 0.2865 | HiddenWeight: 0.100
+  Epoch 2 | Batch 700/2105 | Loss: 0.1391 | CE: 0.1758 | KD: 0.1146 | Hidden: 0.2902 | HiddenWeight: 0.100
+  Epoch 2 | Batch 750/2105 | Loss: 0.1785 | CE: 0.0169 | KD: 0.2888 | Hidden: 0.2905 | HiddenWeight: 0.100
+  Epoch 2 | Batch 800/2105 | Loss: 0.0897 | CE: 0.0403 | KD: 0.0947 | Hidden: 0.3024 | HiddenWeight: 0.100
+  Epoch 2 | Batch 850/2105 | Loss: 0.0456 | CE: 0.0170 | KD: 0.0229 | Hidden: 0.2906 | HiddenWeight: 0.100
+  Epoch 2 | Batch 900/2105 | Loss: 0.0859 | CE: 0.0493 | KD: 0.0825 | Hidden: 0.2991 | HiddenWeight: 0.100
+  Epoch 2 | Batch 950/2105 | Loss: 0.0484 | CE: 0.0194 | KD: 0.0271 | Hidden: 0.2901 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1000/2105 | Loss: 0.0546 | CE: 0.0421 | KD: 0.0264 | Hidden: 0.2877 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1050/2105 | Loss: 0.0391 | CE: 0.0103 | KD: 0.0144 | Hidden: 0.2886 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1100/2105 | Loss: 0.0750 | CE: 0.0299 | KD: 0.0754 | Hidden: 0.2828 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1150/2105 | Loss: 0.1043 | CE: 0.0542 | KD: 0.1190 | Hidden: 0.2852 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1200/2105 | Loss: 0.0635 | CE: 0.0220 | KD: 0.0554 | Hidden: 0.2922 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1250/2105 | Loss: 0.0897 | CE: 0.0166 | KD: 0.1099 | Hidden: 0.2979 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1300/2105 | Loss: 0.0403 | CE: 0.0182 | KD: 0.0113 | Hidden: 0.2913 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1350/2105 | Loss: 0.1095 | CE: 0.0587 | KD: 0.1256 | Hidden: 0.2913 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1400/2105 | Loss: 0.0535 | CE: 0.0122 | KD: 0.0399 | Hidden: 0.2987 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1450/2105 | Loss: 0.2243 | CE: 0.0509 | KD: 0.3620 | Hidden: 0.2807 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1500/2105 | Loss: 0.1305 | CE: 0.0861 | KD: 0.1514 | Hidden: 0.2896 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1550/2105 | Loss: 0.0522 | CE: 0.0136 | KD: 0.0378 | Hidden: 0.2924 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1600/2105 | Loss: 0.0948 | CE: 0.0905 | KD: 0.0771 | Hidden: 0.2904 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1650/2105 | Loss: 0.1408 | CE: 0.0536 | KD: 0.1910 | Hidden: 0.2927 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1700/2105 | Loss: 0.0550 | CE: 0.0127 | KD: 0.0441 | Hidden: 0.2918 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1750/2105 | Loss: 0.0454 | CE: 0.0182 | KD: 0.0238 | Hidden: 0.2804 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1800/2105 | Loss: 0.0505 | CE: 0.0241 | KD: 0.0288 | Hidden: 0.2893 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1850/2105 | Loss: 0.0784 | CE: 0.0191 | KD: 0.0877 | Hidden: 0.2883 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1900/2105 | Loss: 0.0702 | CE: 0.0213 | KD: 0.0688 | Hidden: 0.2944 | HiddenWeight: 0.100
+  Epoch 2 | Batch 1950/2105 | Loss: 0.0996 | CE: 0.0463 | KD: 0.1160 | Hidden: 0.2767 | HiddenWeight: 0.100
+  Epoch 2 | Batch 2000/2105 | Loss: 0.0590 | CE: 0.0362 | KD: 0.0368 | Hidden: 0.2973 | HiddenWeight: 0.100
+  Epoch 2 | Batch 2050/2105 | Loss: 0.0367 | CE: 0.0100 | KD: 0.0092 | Hidden: 0.2909 | HiddenWeight: 0.100
+  Epoch 2 | Batch 2100/2105 | Loss: 0.0451 | CE: 0.0153 | KD: 0.0246 | Hidden: 0.2824 | HiddenWeight: 0.100
+
+Epoch 2 summary:
+  Avg Loss: 0.0776
+  CE: 0.0482 | KD: 0.0681 | Hidden: 0.2911
+  Hidden Weight: 0.100
+  Validation Accuracy: 0.9060
+  Validation Loss: 0.2676
+  Peak Memory: 1158.2 MB
+
+--- QKD recovery finished ---
+Best validation accuracy: 0.9060
+Model saved to: models\formal_dgsp_wkd_20260325_074046_formal_dgsp_wkd_sp20_qkd

@@ -1,0 +1,26 @@
+{
+  "sp15": {
+    "DGSP-WKD": {
+      "accuracy": 0.9048165137614679,
+      "loss": 0.2750936237360359,
+      "real_sparsity": 0.15031086957013162,
+      "theoretical_gflops": 0.5788923072901476,
+      "measured_latency_ms": 14.244510412216187,
+      "model_size_mb": 68.70995616912842,
+      "peak_memory_mb": 208.03515625,
+      "structural_speedup_realized": false
+    }
+  },
+  "sp20": {
+    "DGSP-WKD": {
+      "accuracy": 0.9059633027522935,
+      "loss": 0.2675547988384689,
+      "real_sparsity": 0.2003489835762683,
+      "theoretical_gflops": 0.5448013930580151,
+      "measured_latency_ms": 17.9419056892395,
+      "model_size_mb": 68.70995616912842,
+      "peak_memory_mb": 232.1064453125,
+      "structural_speedup_realized": false
+    }
+  }
+}

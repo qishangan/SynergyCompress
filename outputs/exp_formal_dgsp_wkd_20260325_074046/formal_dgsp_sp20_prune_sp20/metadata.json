@@ -1,0 +1,27 @@
+{
+  "name": "formal_dgsp_sp20_prune_sp20",
+  "return_code": 0,
+  "duration_sec": 2002.124694108963,
+  "command": [
+    "C:\\Users\\23074\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "8_pruning_with_finetuning.py",
+    "--sensitivity_method",
+    "dgsp",
+    "--target_sparsity",
+    "0.2",
+    "--alpha",
+    "1.0",
+    "--experiment_name",
+    "formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_prune_sp20",
+    "--total_epochs",
+    "6",
+    "--lambda_score",
+    "0.5",
+    "--ema_beta",
+    "0.9",
+    "--train_subset_ratio",
+    "0.5",
+    "--val_subset_ratio",
+    "1.0"
+  ]
+}

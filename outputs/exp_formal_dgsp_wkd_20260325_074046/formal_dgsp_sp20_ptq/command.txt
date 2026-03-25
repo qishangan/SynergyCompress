@@ -1,0 +1,1 @@
+C:\Users\23074\AppData\Local\Programs\Python\Python312\python.exe 9_quantize_pruned_model.py --pruned_model_path models\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_prune_sp20 --output_dir models\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_ptq

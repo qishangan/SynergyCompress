@@ -1,0 +1,1 @@
+﻿python 7_evaluate_and_generate_report.py --manifest outputs/exp_baseline_refresh_20260325_120004/sp20_eval/manifest.json --output_json outputs/exp_baseline_refresh_20260325_120004/sp20_eval/results.json --output_png outputs/exp_baseline_refresh_20260325_120004/sp20_eval/results.png

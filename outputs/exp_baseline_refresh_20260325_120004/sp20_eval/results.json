@@ -1,0 +1,42 @@
+{
+  "Distilled Student (Baseline)": {
+    "accuracy": 0.9002293577981652,
+    "loss": 0.4174833619334829,
+    "real_sparsity": 0.0,
+    "theoretical_gflops": 0.681298944,
+    "measured_latency_ms": 40.253057670593265,
+    "model_size_mb": 255.42503356933594,
+    "peak_memory_mb": 563.80517578125,
+    "structural_speedup_realized": false
+  },
+  "Baseline Pruned Sparse FP32": {
+    "accuracy": 0.8795871559633027,
+    "loss": 0.36456690687652027,
+    "real_sparsity": 0.20001446759259256,
+    "theoretical_gflops": 0.5450292984444445,
+    "measured_latency_ms": 37.45809898376465,
+    "model_size_mb": 255.42503356933594,
+    "peak_memory_mb": 403.6865234375,
+    "structural_speedup_realized": false
+  },
+  "Baseline Pruned + PTQ": {
+    "accuracy": 0.8784403669724771,
+    "loss": 0.3568330904759398,
+    "real_sparsity": 0.20001446759259256,
+    "theoretical_gflops": 0.5450292984444445,
+    "measured_latency_ms": 13.995147228240967,
+    "model_size_mb": 68.70995616912842,
+    "peak_memory_mb": 160.642578125,
+    "structural_speedup_realized": false
+  },
+  "Baseline Pruned + QKD": {
+    "accuracy": 0.8841743119266054,
+    "loss": 0.3460006281870221,
+    "real_sparsity": 0.20001446759259256,
+    "theoretical_gflops": 0.5450292984444445,
+    "measured_latency_ms": 15.208636713027953,
+    "model_size_mb": 68.70995616912842,
+    "peak_memory_mb": 184.4638671875,
+    "structural_speedup_realized": false
+  }
+}

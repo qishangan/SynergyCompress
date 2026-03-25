@@ -1,0 +1,46 @@
+{
+  "sp15": {
+    "DGSP Sparse FP32": {
+      "accuracy": 0.9048165137614679,
+      "loss": 0.2912719405230579,
+      "real_sparsity": 0.15031086957013162,
+      "theoretical_gflops": 0.5788923072901476,
+      "measured_latency_ms": 38.812574195861814,
+      "model_size_mb": 255.42503356933594,
+      "peak_memory_mb": 450.2041015625,
+      "structural_speedup_realized": false
+    },
+    "DGSP + PTQ": {
+      "accuracy": 0.9059633027522935,
+      "loss": 0.2855450804558916,
+      "real_sparsity": 0.15031086957013162,
+      "theoretical_gflops": 0.5788923072901476,
+      "measured_latency_ms": 14.947532844543456,
+      "model_size_mb": 68.70995616912842,
+      "peak_memory_mb": 184.0888671875,
+      "structural_speedup_realized": false
+    }
+  },
+  "sp20": {
+    "DGSP Sparse FP32": {
+      "accuracy": 0.9094036697247706,
+      "loss": 0.28711607549852186,
+      "real_sparsity": 0.2003489835762683,
+      "theoretical_gflops": 0.5448013930580151,
+      "measured_latency_ms": 47.471499061584474,
+      "model_size_mb": 255.42503356933594,
+      "peak_memory_mb": 454.2041015625,
+      "structural_speedup_realized": false
+    },
+    "DGSP + PTQ": {
+      "accuracy": 0.9059633027522935,
+      "loss": 0.28306529554752036,
+      "real_sparsity": 0.2003489835762683,
+      "theoretical_gflops": 0.5448013930580151,
+      "measured_latency_ms": 21.13437623977661,
+      "model_size_mb": 68.70995616912842,
+      "peak_memory_mb": 208.03515625,
+      "structural_speedup_realized": false
+    }
+  }
+}

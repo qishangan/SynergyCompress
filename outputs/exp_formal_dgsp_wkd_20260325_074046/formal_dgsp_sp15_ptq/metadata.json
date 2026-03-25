@@ -1,0 +1,13 @@
+{
+  "name": "formal_dgsp_sp15_ptq",
+  "return_code": 0,
+  "duration_sec": 39.28564095497131,
+  "command": [
+    "C:\\Users\\23074\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "9_quantize_pruned_model.py",
+    "--pruned_model_path",
+    "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_prune_sp15",
+    "--output_dir",
+    "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_ptq"
+  ]
+}

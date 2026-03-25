@@ -1,0 +1,72 @@
+{
+  "Distilled Student (Baseline)": {
+    "accuracy": 0.9002293577981652,
+    "loss": 0.4174833619334829,
+    "real_sparsity": 0.0,
+    "theoretical_gflops": 0.681298944,
+    "measured_latency_ms": 38.882995223999025,
+    "model_size_mb": 255.42503356933594,
+    "peak_memory_mb": 399.5615234375,
+    "structural_speedup_realized": false
+  },
+  "Baseline Pruned Sparse FP32": {
+    "accuracy": 0.8727064220183486,
+    "loss": 0.3521765284582016,
+    "real_sparsity": 0.11250361689814814,
+    "theoretical_gflops": 0.6046503486111111,
+    "measured_latency_ms": 36.92565441131592,
+    "model_size_mb": 255.42503356933594,
+    "peak_memory_mb": 403.9365234375,
+    "structural_speedup_realized": false
+  },
+  "Baseline Pruned + PTQ": {
+    "accuracy": 0.8646788990825688,
+    "loss": 0.35960216560495006,
+    "real_sparsity": 0.11250361689814814,
+    "theoretical_gflops": 0.6046503486111111,
+    "measured_latency_ms": 14.860670232772828,
+    "model_size_mb": 68.70995616912842,
+    "peak_memory_mb": 156.767578125,
+    "structural_speedup_realized": false
+  },
+  "Baseline Pruned + QKD": {
+    "accuracy": 0.8704128440366973,
+    "loss": 0.35760395734681993,
+    "real_sparsity": 0.11250361689814814,
+    "theoretical_gflops": 0.6046503486111111,
+    "measured_latency_ms": 14.705907154083253,
+    "model_size_mb": 68.70995616912842,
+    "peak_memory_mb": 180.5888671875,
+    "structural_speedup_realized": false
+  },
+  "DGSP Sparse FP32": {
+    "accuracy": 0.9048165137614679,
+    "loss": 0.2912719405230579,
+    "real_sparsity": 0.15031086957013162,
+    "theoretical_gflops": 0.5788923072901476,
+    "measured_latency_ms": 38.812574195861814,
+    "model_size_mb": 255.42503356933594,
+    "peak_memory_mb": 450.2041015625,
+    "structural_speedup_realized": false
+  },
+  "DGSP + PTQ": {
+    "accuracy": 0.9059633027522935,
+    "loss": 0.2855450804558916,
+    "real_sparsity": 0.15031086957013162,
+    "theoretical_gflops": 0.5788923072901476,
+    "measured_latency_ms": 14.947532844543456,
+    "model_size_mb": 68.70995616912842,
+    "peak_memory_mb": 184.0888671875,
+    "structural_speedup_realized": false
+  },
+  "DGSP-WKD": {
+    "accuracy": 0.9048165137614679,
+    "loss": 0.2750936237360359,
+    "real_sparsity": 0.15031086957013162,
+    "theoretical_gflops": 0.5788923072901476,
+    "measured_latency_ms": 14.244510412216187,
+    "model_size_mb": 68.70995616912842,
+    "peak_memory_mb": 208.03515625,
+    "structural_speedup_realized": false
+  }
+}

@@ -1,0 +1,1 @@
+﻿python 8_pruning_with_finetuning.py --sensitivity_method weight --target_sparsity 0.20 --alpha 1.0 --lambda_score 0.0 --disable_layer_adaptive --total_epochs 8 --experiment_name baseline_exact_sp20_prune_rerun

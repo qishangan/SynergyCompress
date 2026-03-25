@@ -1,0 +1,15 @@
+{
+  "name": "formal_sp15_eval",
+  "return_code": 0,
+  "duration_sec": 20.466779232025146,
+  "command": [
+    "C:\\Users\\23074\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "7_evaluate_and_generate_report.py",
+    "--manifest",
+    "outputs\\exp_formal_dgsp_wkd_20260325_074046\\formal_sp15_manifest.json",
+    "--output_json",
+    "outputs\\exp_formal_dgsp_wkd_20260325_074046\\formal_sp15_results.json",
+    "--output_png",
+    "outputs\\exp_formal_dgsp_wkd_20260325_074046\\formal_sp15_results.png"
+  ]
+}

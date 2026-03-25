@@ -1,0 +1,3 @@
+--- Loading pruned model from: models/baseline_exact_sp20_prune_rerun ---
+--- Saving quantized model to: models\baseline_exact_sp20_ptq_rerun ---
+--- PTQ complete ---

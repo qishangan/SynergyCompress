@@ -1,0 +1,3 @@
+--- Loading pruned model from: models\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_prune_sp20 ---
+--- Saving quantized model to: models\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp20_ptq ---
+--- PTQ complete ---

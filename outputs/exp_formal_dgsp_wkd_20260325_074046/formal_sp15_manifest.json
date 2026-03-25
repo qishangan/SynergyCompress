@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Distilled Student (Baseline)",
+    "eval_path": "./student_model",
+    "quantized": false,
+    "sparsity_source_path": "./student_model"
+  },
+  {
+    "name": "Baseline Pruned Sparse FP32",
+    "eval_path": "models\\formal_dgsp_wkd_20260325_074046_formal_baseline_sp15_prune_sp15",
+    "quantized": false,
+    "sparsity_source_path": "models\\formal_dgsp_wkd_20260325_074046_formal_baseline_sp15_prune_sp15"
+  },
+  {
+    "name": "Baseline Pruned + PTQ",
+    "eval_path": "models\\formal_dgsp_wkd_20260325_074046_formal_baseline_sp15_ptq",
+    "quantized": true,
+    "sparsity_source_path": "models\\formal_dgsp_wkd_20260325_074046_formal_baseline_sp15_prune_sp15"
+  },
+  {
+    "name": "Baseline Pruned + QKD",
+    "eval_path": "models\\formal_dgsp_wkd_20260325_074046_formal_baseline_sp15_qkd",
+    "quantized": true,
+    "sparsity_source_path": "models\\formal_dgsp_wkd_20260325_074046_formal_baseline_sp15_prune_sp15"
+  },
+  {
+    "name": "DGSP Sparse FP32",
+    "eval_path": "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_prune_sp15",
+    "quantized": false,
+    "sparsity_source_path": "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_prune_sp15"
+  },
+  {
+    "name": "DGSP + PTQ",
+    "eval_path": "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_ptq",
+    "quantized": true,
+    "sparsity_source_path": "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_prune_sp15"
+  },
+  {
+    "name": "DGSP-WKD",
+    "eval_path": "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_wkd_sp15_qkd",
+    "quantized": true,
+    "sparsity_source_path": "models\\formal_dgsp_wkd_20260325_074046_formal_dgsp_sp15_prune_sp15"
+  }
+]

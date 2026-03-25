@@ -1,0 +1,28 @@
+C:\Users\23074\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\quantizers\auto.py:222: UserWarning: You passed `quantization_config` or equivalent parameters to `from_pretrained` but the model you're loading already has a `quantization_config` attribute. The `quantization_config` from the model will be used.
+  warnings.warn(warning_msg)
+--- Starting Final Model Evaluation ---
+  -> Calculating dense reference GFLOPs from: ./student_model
+
+--- Evaluating: Distilled Student (Baseline) ---
+  -> Acc: 0.9002 | Loss: 0.4175 | Real Sparsity: 0.0000 | Theoretical GFLOPs: 0.6813 | Latency(ms): 40.25 | Size(MB): 255.43
+
+--- Evaluating: Baseline Pruned Sparse FP32 ---
+  -> Acc: 0.8796 | Loss: 0.3646 | Real Sparsity: 0.2000 | Theoretical GFLOPs: 0.5450 | Latency(ms): 37.46 | Size(MB): 255.43
+
+--- Evaluating: Baseline Pruned + PTQ ---
+  -> Acc: 0.8784 | Loss: 0.3568 | Real Sparsity: 0.2000 | Theoretical GFLOPs: 0.5450 | Latency(ms): 14.00 | Size(MB): 68.71
+
+--- Evaluating: Baseline Pruned + QKD ---
+  -> Acc: 0.8842 | Loss: 0.3460 | Real Sparsity: 0.2000 | Theoretical GFLOPs: 0.5450 | Latency(ms): 15.21 | Size(MB): 68.71
+
+--- Evaluation Summary ---
+Model                                | Acc      | Loss     | Real Sparsity  | Theoretical GFLOPs  | Latency(ms)  | Size(MB)  
+-----------------------------------------------------------------------------------------------------------------------------
+Distilled Student (Baseline)         | 0.9002   | 0.4175   | 0.0000         | 0.6813              | 40.25        | 255.43    
+Baseline Pruned Sparse FP32          | 0.8796   | 0.3646   | 0.2000         | 0.5450              | 37.46        | 255.43    
+Baseline Pruned + PTQ                | 0.8784   | 0.3568   | 0.2000         | 0.5450              | 14.00        | 68.71     
+Baseline Pruned + QKD                | 0.8842   | 0.3460   | 0.2000         | 0.5450              | 15.21        | 68.71     
+
+--- Detailed results saved to outputs/exp_baseline_refresh_20260325_120004/sp20_eval/results.json ---
+
+--- Report plot saved to outputs/exp_baseline_refresh_20260325_120004/sp20_eval/results.png ---

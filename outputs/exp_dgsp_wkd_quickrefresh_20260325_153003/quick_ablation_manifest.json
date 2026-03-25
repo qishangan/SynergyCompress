@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Distilled Student (Baseline)",
+    "eval_path": "./student_model",
+    "quantized": false,
+    "sparsity_source_path": "./student_model"
+  },
+  {
+    "name": "A. Baseline Pruned",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_a_baseline_prune_sp20",
+    "quantized": false,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_a_baseline_prune_sp20"
+  },
+  {
+    "name": "A. Baseline QKD",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_a_baseline_qkd",
+    "quantized": true,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_a_baseline_prune_sp20"
+  },
+  {
+    "name": "B. DGSP Score Only Pruned",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_b_dgsp_global_prune_sp20",
+    "quantized": false,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_b_dgsp_global_prune_sp20"
+  },
+  {
+    "name": "B. DGSP Score Only QKD",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_b_dgsp_global_qkd",
+    "quantized": true,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_b_dgsp_global_prune_sp20"
+  },
+  {
+    "name": "C. DGSP + Adaptive Pruned",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_c_dgsp_adaptive_prune_sp20",
+    "quantized": false,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_c_dgsp_adaptive_prune_sp20"
+  },
+  {
+    "name": "C. DGSP + Adaptive QKD",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_c_dgsp_adaptive_qkd",
+    "quantized": true,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_c_dgsp_adaptive_prune_sp20"
+  },
+  {
+    "name": "D. DGSP-WKD",
+    "eval_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_d_dgsp_wkd_qkd",
+    "quantized": true,
+    "sparsity_source_path": "models\\dgsp_wkd_quickrefresh_20260325_153003_quick_c_dgsp_adaptive_prune_sp20"
+  }
+]

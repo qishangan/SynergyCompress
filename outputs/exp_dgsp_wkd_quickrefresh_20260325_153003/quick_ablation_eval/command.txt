@@ -1,0 +1,1 @@
+C:\Users\23074\AppData\Local\Programs\Python\Python312\python.exe 7_evaluate_and_generate_report.py --manifest outputs\exp_dgsp_wkd_quickrefresh_20260325_153003\quick_ablation_manifest.json --output_json outputs\exp_dgsp_wkd_quickrefresh_20260325_153003\quick_ablation_results.json --output_png outputs\exp_dgsp_wkd_quickrefresh_20260325_153003\quick_ablation_results.png

@@ -1,0 +1,44 @@
+--- Starting Final Model Evaluation ---
+
+Map:   0%|          | 0/1821 [00:00<?, ? examples/s]
+Map: 100%|��������������������| 1821/1821 [00:00<00:00, 12051.91 examples/s]
+Map: 100%|��������������������| 1821/1821 [00:00<00:00, 10114.92 examples/s]
+  -> Calculating dense reference GFLOPs from: ./student_model
+
+--- Evaluating: Distilled Student (Baseline) ---
+  -> Acc: 0.9002 | Loss: 0.4175 | Real Sparsity: 0.0000 | Theoretical GFLOPs: 0.6813 | Latency(ms): 38.88 | Size(MB): 255.43
+
+--- Evaluating: Baseline Pruned Sparse FP32 ---
+  -> Acc: 0.8727 | Loss: 0.3522 | Real Sparsity: 0.1125 | Theoretical GFLOPs: 0.6047 | Latency(ms): 36.93 | Size(MB): 255.43
+
+--- Evaluating: Baseline Pruned + PTQ ---
+C:\Users\23074\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\quantizers\auto.py:222: UserWarning: You passed `quantization_config` or equivalent parameters to `from_pretrained` but the model you're loading already has a `quantization_config` attribute. The `quantization_config` from the model will be used.
+  warnings.warn(warning_msg)
+  -> Acc: 0.8647 | Loss: 0.3596 | Real Sparsity: 0.1125 | Theoretical GFLOPs: 0.6047 | Latency(ms): 14.86 | Size(MB): 68.71
+
+--- Evaluating: Baseline Pruned + QKD ---
+  -> Acc: 0.8704 | Loss: 0.3576 | Real Sparsity: 0.1125 | Theoretical GFLOPs: 0.6047 | Latency(ms): 14.71 | Size(MB): 68.71
+
+--- Evaluating: DGSP Sparse FP32 ---
+  -> Acc: 0.9048 | Loss: 0.2913 | Real Sparsity: 0.1503 | Theoretical GFLOPs: 0.5789 | Latency(ms): 38.81 | Size(MB): 255.43
+
+--- Evaluating: DGSP + PTQ ---
+  -> Acc: 0.9060 | Loss: 0.2855 | Real Sparsity: 0.1503 | Theoretical GFLOPs: 0.5789 | Latency(ms): 14.95 | Size(MB): 68.71
+
+--- Evaluating: DGSP-WKD ---
+  -> Acc: 0.9048 | Loss: 0.2751 | Real Sparsity: 0.1503 | Theoretical GFLOPs: 0.5789 | Latency(ms): 14.24 | Size(MB): 68.71
+
+--- Evaluation Summary ---
+Model                                | Acc      | Loss     | Real Sparsity  | Theoretical GFLOPs  | Latency(ms)  | Size(MB)  
+-----------------------------------------------------------------------------------------------------------------------------
+Distilled Student (Baseline)         | 0.9002   | 0.4175   | 0.0000         | 0.6813              | 38.88        | 255.43    
+Baseline Pruned Sparse FP32          | 0.8727   | 0.3522   | 0.1125         | 0.6047              | 36.93        | 255.43    
+Baseline Pruned + PTQ                | 0.8647   | 0.3596   | 0.1125         | 0.6047              | 14.86        | 68.71     
+Baseline Pruned + QKD                | 0.8704   | 0.3576   | 0.1125         | 0.6047              | 14.71        | 68.71     
+DGSP Sparse FP32                     | 0.9048   | 0.2913   | 0.1503         | 0.5789              | 38.81        | 255.43    
+DGSP + PTQ                           | 0.9060   | 0.2855   | 0.1503         | 0.5789              | 14.95        | 68.71     
+DGSP-WKD                             | 0.9048   | 0.2751   | 0.1503         | 0.5789              | 14.24        | 68.71     
+
+--- Detailed results saved to outputs\exp_formal_dgsp_wkd_20260325_074046\formal_sp15_results.json ---
+
+--- Report plot saved to outputs\exp_formal_dgsp_wkd_20260325_074046\formal_sp15_results.png ---

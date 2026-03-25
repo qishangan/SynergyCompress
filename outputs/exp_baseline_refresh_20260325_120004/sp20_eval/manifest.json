@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Distilled Student (Baseline)",
+    "eval_path": "./student_model",
+    "quantized": false,
+    "sparsity_source_path": "./student_model"
+  },
+  {
+    "name": "Baseline Pruned Sparse FP32",
+    "eval_path": "models/baseline_exact_sp20_prune_rerun",
+    "quantized": false,
+    "sparsity_source_path": "models/baseline_exact_sp20_prune_rerun"
+  },
+  {
+    "name": "Baseline Pruned + PTQ",
+    "eval_path": "models/baseline_exact_sp20_ptq_rerun",
+    "quantized": true,
+    "sparsity_source_path": "models/baseline_exact_sp20_prune_rerun"
+  },
+  {
+    "name": "Baseline Pruned + QKD",
+    "eval_path": "models/baseline_exact_sp20_qkd_rerun",
+    "quantized": true,
+    "sparsity_source_path": "models/baseline_exact_sp20_prune_rerun"
+  }
+]
